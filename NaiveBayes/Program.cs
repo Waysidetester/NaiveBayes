@@ -21,6 +21,37 @@ namespace NaiveBayes
             info.Add(new Tuple<string, double, double, double>("female", 5.4, 130, 7));
             info.Add(new Tuple<string, double, double, double>("female", 5.75, 150, 9));
 
+            List<double> TrainData(List<Tuple<string, double, double, double>> trainingData)
+            {
+                double firstAvg = trainingData.Select(t => t.Item2).ToList().Average();
+                double secondAvg = trainingData.Select(t => t.Item3).ToList().Average();
+                double thirdAvg = trainingData.Select(t => t.Item4).ToList().Average();
+
+                double firstVari = Variance(firstAvg, trainingData.Select(t => t.Item2).ToList());
+                double secondVari = Variance(firstAvg, trainingData.Select(t => t.Item3).ToList());
+                double thirdVari = Variance(firstAvg, trainingData.Select(t => t.Item4).ToList());
+
+                var PredictionOutputList = trainingData.Select(t => t.Item1)
+                    .GroupBy(str => str, (key, list) => new { Type = key, Count = list.Count() }).ToList();
+
+                double predictOutputA = PredictionOutputList[0].Count/(PredictionOutputList[0].Count + PredictionOutputList[1].Count);
+                double predictOutputB = PredictionOutputList[1].Count/(PredictionOutputList[0].Count + PredictionOutputList[1].Count);
+
+                return new List<double>
+                {
+                    firstAvg,
+                    firstVari,
+                    secondAvg,
+                    secondVari,
+                    thirdAvg,
+                    thirdVari,
+                    predictOutputA,
+                    predictOutputB,
+                };
+            }
+
+            List<double> predictorConstants = TrainData(info);
+
             double maleCount = 0;
             List<double> maleHeight = new List<double>();
             List<double> maleWeight = new List<double>();
