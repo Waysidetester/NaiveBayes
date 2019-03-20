@@ -23,6 +23,14 @@ namespace NaiveBayes
 
             List<double> TrainData(List<Tuple<string, double, double, double>> trainingData)
             {
+                IEnumerable<IGrouping<string,Tuple<string,double,double,double>>>groupedTrainingData= WhatToSolveFor(trainingData);
+
+                foreach (var outcomeType in groupedTrainingData)
+                {
+                    var e = outcomeType.Select(x => x).ToList();
+
+                }
+
                 double firstAvg = trainingData.Select(t => t.Item2).ToList().Average();
                 double secondAvg = trainingData.Select(t => t.Item3).ToList().Average();
                 double thirdAvg = trainingData.Select(t => t.Item4).ToList().Average();
@@ -48,6 +56,12 @@ namespace NaiveBayes
                     predictOutputA,
                     predictOutputB,
                 };
+            }
+
+            IEnumerable<IGrouping<string, Tuple<string, double, double, double>>> WhatToSolveFor(List<Tuple<string, double, double, double>> trainingList)
+            {
+                var groupedTrainingData = trainingList.GroupBy(x => x.Item1);
+                return groupedTrainingData;
             }
 
             List<double> predictorConstants = TrainData(info);
