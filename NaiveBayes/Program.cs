@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using NaiveBayes.TrainingData;
 
 namespace NaiveBayes
 {
@@ -10,36 +11,36 @@ namespace NaiveBayes
         {
             // Check https://en.wikipedia.org/wiki/Naive_Bayes_classifier for explanation
 
-            List<Tuple<string, double, double, double>> info = new List<Tuple<string, double, double, double>>();
+            List<Data> info = new List<Data>();
 
-            info.Add(new Tuple<string, double, double, double>("male", 6, 180, 12));
-            info.Add(new Tuple<string, double, double, double>("male", 5.92, 190, 11));
-            info.Add(new Tuple<string, double, double, double>("male", 5.58, 170, 12));
-            info.Add(new Tuple<string, double, double, double>("male", 5.92, 165, 10));
-            info.Add(new Tuple<string, double, double, double>("female", 5, 100, 6));
-            info.Add(new Tuple<string, double, double, double>("female", 5.5, 150, 8));
-            info.Add(new Tuple<string, double, double, double>("female", 5.4, 130, 7));
-            info.Add(new Tuple<string, double, double, double>("female", 5.75, 150, 9));
+            info.Add(new Data("male", 6, 180, 12));
+            info.Add(new Data("male", 5.92, 190, 11));
+            info.Add(new Data("male", 5.58, 170, 12));
+            info.Add(new Data("male", 5.92, 165, 10));
+            info.Add(new Data("female", 5, 100, 6));
+            info.Add(new Data("female", 5.5, 150, 8));
+            info.Add(new Data("female", 5.4, 130, 7));
+            info.Add(new Data("female", 5.75, 150, 9));
 
-            List<double> TrainData(List<Tuple<string, double, double, double>> trainingData)
+            List<double> TrainData(List<Data> trainingData)
             {
-                IEnumerable<IGrouping<string,Tuple<string,double,double,double>>>groupedTrainingData= WhatToSolveFor(trainingData);
+                IEnumerable<IGrouping<string, Data>>groupedTrainingData= WhatToSolveFor(trainingData);
 
-                foreach (var outcomeType in groupedTrainingData)
+                foreach (var groupedList in groupedTrainingData)
                 {
-                    var e = outcomeType.Select(x => x).ToList();
-
+                    var listOfSameOutcome = groupedList.ToList();
+                    listOfSameOutcome.ToList();
                 }
 
-                double firstAvg = trainingData.Select(t => t.Item2).ToList().Average();
-                double secondAvg = trainingData.Select(t => t.Item3).ToList().Average();
-                double thirdAvg = trainingData.Select(t => t.Item4).ToList().Average();
+                double firstAvg = trainingData.Select(t => t.Height).ToList().Average();
+                double secondAvg = trainingData.Select(t => t.Weight).ToList().Average();
+                double thirdAvg = trainingData.Select(t => t.Foot).ToList().Average();
 
-                double firstVari = Variance(firstAvg, trainingData.Select(t => t.Item2).ToList());
-                double secondVari = Variance(firstAvg, trainingData.Select(t => t.Item3).ToList());
-                double thirdVari = Variance(firstAvg, trainingData.Select(t => t.Item4).ToList());
+                double firstVari = Variance(firstAvg, trainingData.Select(t => t.Height).ToList());
+                double secondVari = Variance(firstAvg, trainingData.Select(t => t.Weight).ToList());
+                double thirdVari = Variance(firstAvg, trainingData.Select(t => t.Foot).ToList());
 
-                var PredictionOutputList = trainingData.Select(t => t.Item1)
+                var PredictionOutputList = trainingData.Select(t => t.Gender)
                     .GroupBy(str => str, (key, list) => new { Type = key, Count = list.Count() }).ToList();
 
                 double predictOutputA = PredictionOutputList[0].Count/(PredictionOutputList[0].Count + PredictionOutputList[1].Count);
@@ -58,9 +59,9 @@ namespace NaiveBayes
                 };
             }
 
-            IEnumerable<IGrouping<string, Tuple<string, double, double, double>>> WhatToSolveFor(List<Tuple<string, double, double, double>> trainingList)
+            IEnumerable<IGrouping<string, Data>> WhatToSolveFor(List<Data> trainingList)
             {
-                var groupedTrainingData = trainingList.GroupBy(x => x.Item1);
+                var groupedTrainingData = trainingList.GroupBy(x=> x.Gender);
                 return groupedTrainingData;
             }
 
@@ -79,18 +80,18 @@ namespace NaiveBayes
             for (int i = 0; i < info.Count; i++)
             {
                 var data = info[i];
-                if (data.Item1 == "male")
+                if (data.Gender == "male")
                 {
-                    maleHeight.Add(data.Item2);
-                    maleWeight.Add(data.Item3);
-                    maleFoot.Add(data.Item4);
+                    maleHeight.Add(data.Height);
+                    maleWeight.Add(data.Weight);
+                    maleFoot.Add(data.Foot);
                     maleCount++;
                 }
-                else if (data.Item1 == "female")
+                else if (data.Gender == "female")
                 {
-                    femaleHeight.Add(data.Item2);
-                    femaleWeight.Add(data.Item3);
-                    femaleFoot.Add(data.Item4);
+                    femaleHeight.Add(data.Height);
+                    femaleWeight.Add(data.Weight);
+                    femaleFoot.Add(data.Foot);
                     femaleCount++;
                 }
             }
