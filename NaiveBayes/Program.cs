@@ -31,12 +31,12 @@ namespace NaiveBayes
                 {
                     var listOfSameOutcome = groupedList.ToList();
                     listOfSameOutcome.ToList();
-                    var x = typeof(Data).GetProperties();
+                    /* var x = typeof(Data).GetProperties();
                     foreach (var y in x)
                     {
                         double avgType = Average(trainingData, y);
                         Console.WriteLine(y);
-                    }
+                    } */
                 }
 
                 double firstAvg = trainingData.Select(t => t.Height).ToList().Average();
@@ -108,10 +108,10 @@ namespace NaiveBayes
                 return (listOfMeasurement.Select(x => Math.Pow(x - average, 2)).Sum() / (listOfMeasurement.Count - 1));
             }
 
-            double Average(List<Data> trainingData, PropertyInfo propSelector)
+            /* double Average(List<Data> trainingData, PropertyInfo propSelector)
             {
-                return trainingData.Select(t => t.propSelector).Average();
-            }
+                return trainingData.Select(t => new Double(d).ToList().Average();
+            } */
 
             var maleHeightAve = maleHeight.Average();
             var maleHeightVari = Variance(maleHeightAve, maleHeight);
