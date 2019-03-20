@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using NaiveBayes.TrainingData;
 
 namespace NaiveBayes
@@ -30,6 +31,12 @@ namespace NaiveBayes
                 {
                     var listOfSameOutcome = groupedList.ToList();
                     listOfSameOutcome.ToList();
+                    var x = typeof(Data).GetProperties();
+                    foreach (var y in x)
+                    {
+                        double avgType = Average(trainingData, y);
+                        Console.WriteLine(y);
+                    }
                 }
 
                 double firstAvg = trainingData.Select(t => t.Height).ToList().Average();
@@ -99,6 +106,11 @@ namespace NaiveBayes
             double Variance(double average, List<double>listOfMeasurement)
             {
                 return (listOfMeasurement.Select(x => Math.Pow(x - average, 2)).Sum() / (listOfMeasurement.Count - 1));
+            }
+
+            double Average(List<Data> trainingData, PropertyInfo propSelector)
+            {
+                return trainingData.Select(t => t.propSelector).Average();
             }
 
             var maleHeightAve = maleHeight.Average();
