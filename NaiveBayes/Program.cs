@@ -25,18 +25,28 @@ namespace NaiveBayes
 
             List<double> TrainData(List<Data> trainingData)
             {
+                // separates the training data by what is being solved for
                 IEnumerable<IGrouping<string, Data>>groupedTrainingData= WhatToSolveFor(trainingData);
 
+                // gets properties on the Data class
+                var dataProps = typeof(Data).GetProperties();
+
+                // Loops over the different groups of training data
                 foreach (var groupedList in groupedTrainingData)
                 {
+                    // converts from IGrouping to List
                     var listOfSameOutcome = groupedList.ToList();
-                    listOfSameOutcome.ToList();
-                    /* var x = typeof(Data).GetProperties();
-                    foreach (var y in x)
+
+                    // for each List of similar outcomes ... run command
+                    foreach (var outcome in listOfSameOutcome)
                     {
-                        double avgType = Average(trainingData, y);
-                        Console.WriteLine(y);
-                    } */
+                        // loops over properties in Data class
+                        foreach (var prop in dataProps)
+                        {
+                            // stores value of each property to e. Need to rename and expand this part of the logic.
+                            var e = prop.GetValue(outcome);
+                        }
+                    }
                 }
 
                 double firstAvg = trainingData.Select(t => t.Height).ToList().Average();
