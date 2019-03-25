@@ -65,40 +65,36 @@ namespace NaiveBayes
                 // gets properties on the Data class
                 var dataProps = typeof(Data).GetProperties();
 
-                // Loops over the different groups of training data
+                // =============== Loops over the different groups of training data ===============
                 foreach (var groupedList in groupedData)
                 {
                     // Property is key, dictionary of average/variance is value
                     var outcomeDictionary = new Dictionary<string, Dictionary<string, double>>();
 
-                    // loops over properties in Data class
+                    // =============== loops over properties in Data class ===============
                     foreach (var prop in dataProps)
                     {
                         // average/variance is key, number is value
                         var propDictionary = new Dictionary<string, double>();
 
+
+                        // =============== Begin string analysis =================
                         if(prop.PropertyType == typeof(string))
                         {
-                            var listOfProperty = new List<double>();
-
                             var stringProbability = (groupedList.Count() / totalTrainingData);
-
-                            // for each List of similar outcomes ... run command
-                            foreach (var outcome in groupedList)
-                            {
-                                /* stores value of each property to e. Need to 
-                                 * rename and expand this part of the logic. 
-                                 */
-                                listOfProperty.Add(1);
-                            }
 
                             propDictionary.Add("probability", stringProbability);
                         }
+                        // =============== End string analysis ===================
+
+
+
+                        // =============== Begin number analysis =================
                         else if (prop.PropertyType == typeof(double))
                         {
                             var listOfProperty = new List<double>();
 
-                            // for each List of similar outcomes ... run command
+                            // =============== Get number from identical prop ===============
                             foreach (var outcome in groupedList)
                             {
                                 /* stores value of each property to e. Need to 
@@ -113,11 +109,14 @@ namespace NaiveBayes
                             propDictionary.Add("average", doubleAverage);
                             propDictionary.Add("variance", doubleVariance);
                         }
+                        // =============== End number analysis ===================
+
                         outcomeDictionary.Add(prop.Name, propDictionary);
-                    }
+                    } // =============== End Loop on properties ===============
                     allDataDictionary.Add(groupedList.Key, outcomeDictionary);
-                }
-            }
+                } // =============== End Loop on groupedData ===============
+
+            } // =============== End LoopOverData Method ===============
 
             IEnumerable<IGrouping<string, Data>> WhatToSolveFor(List<Data> trainingList)
             {
