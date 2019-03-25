@@ -81,7 +81,7 @@ namespace NaiveBayes
                         {
                             var listOfProperty = new List<double>();
 
-                            var stringAverage = (groupedList.Count() / totalTrainingData);
+                            var stringProbability = (groupedList.Count() / totalTrainingData);
 
                             // for each List of similar outcomes ... run command
                             foreach (var outcome in groupedList)
@@ -91,10 +91,8 @@ namespace NaiveBayes
                                  */
                                 listOfProperty.Add(1);
                             }
-                            var stringVariance = Variance(stringAverage, listOfProperty);
 
-                            propDictionary.Add("average", stringAverage);
-                            propDictionary.Add("variance", stringVariance);
+                            propDictionary.Add("probability", stringProbability);
                         }
                         else if (prop.PropertyType == typeof(double))
                         {
