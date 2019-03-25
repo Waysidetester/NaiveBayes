@@ -26,28 +26,9 @@ namespace NaiveBayes
             List<double> TrainData(List<Data> trainingData)
             {
                 // separates the training data by what is being solved for
-                IEnumerable<IGrouping<string, Data>>groupedTrainingData= WhatToSolveFor(trainingData);
+                IEnumerable<IGrouping<string, Data>> groupedTrainingData = WhatToSolveFor(trainingData);
 
-                // gets properties on the Data class
-                var dataProps = typeof(Data).GetProperties();
-
-                // Loops over the different groups of training data
-                foreach (var groupedList in groupedTrainingData)
-                {
-                    // converts from IGrouping to List
-                    var listOfSameOutcome = groupedList.ToList();
-
-                    // for each List of similar outcomes ... run command
-                    foreach (var outcome in listOfSameOutcome)
-                    {
-                        // loops over properties in Data class
-                        foreach (var prop in dataProps)
-                        {
-                            // stores value of each property to e. Need to rename and expand this part of the logic.
-                            var e = prop.GetValue(outcome);
-                        }
-                    }
-                }
+                LoopOverData(groupedTrainingData);
 
                 double firstAvg = trainingData.Select(t => t.Height).ToList().Average();
                 double secondAvg = trainingData.Select(t => t.Weight).ToList().Average();
@@ -74,6 +55,40 @@ namespace NaiveBayes
                     predictOutputA,
                     predictOutputB,
                 };
+            }
+
+            void LoopOverData (IEnumerable<IGrouping<string, Data>> groupedData)
+            {
+                // outcome is key, dictionary of props is value
+                var allDataDictionary = new Dictionary<string, Dictionary<string, Dictionary<string, double>>>();
+
+                // gets properties on the Data class
+                var dataProps = typeof(Data).GetProperties();
+
+                // Loops over the different groups of training data
+                foreach (var groupedList in groupedData)
+                {
+                    // Property is key, dictionary of average/variance is value
+                    var outcomeDictionary = new Dictionary<string, Dictionary<string, double>>();
+
+                    // loops over properties in Data class
+                    foreach (var prop in dataProps)
+                    {
+                        // average/variance is key, number is value
+                        var propDictionary = new Dictionary<string, double>();
+
+                        // for each List of similar outcomes ... run command
+                        foreach (var outcome in groupedList)
+                        {
+                            /* stores value of each property to e. Need to 
+                             * rename and expand this part of the logic. 
+                             */
+                            var e = prop.GetValue(outcome);
+                        }
+                        outcomeDictionary.Add(prop.Name, propDictionary);
+                    }
+                    allDataDictionary.Add(groupedList.Key, outcomeDictionary);
+                }
             }
 
             IEnumerable<IGrouping<string, Data>> WhatToSolveFor(List<Data> trainingList)
