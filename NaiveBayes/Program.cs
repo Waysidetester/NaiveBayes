@@ -28,7 +28,7 @@ namespace NaiveBayes
                 // separates the training data by what is being solved for
                 IEnumerable<IGrouping<string, Data>> groupedTrainingData = WhatToSolveFor(trainingData);
 
-                LoopOverData(groupedTrainingData);
+                LoopOverData(groupedTrainingData, trainingData.Count);
 
                 double firstAvg = trainingData.Select(t => t.Height).ToList().Average();
                 double secondAvg = trainingData.Select(t => t.Weight).ToList().Average();
@@ -57,7 +57,7 @@ namespace NaiveBayes
                 };
             }
 
-            void LoopOverData (IEnumerable<IGrouping<string, Data>> groupedData)
+            void LoopOverData(IEnumerable<IGrouping<string, Data>> groupedData, double totalTrainingData)
             {
                 // outcome is key, dictionary of props is value
                 var allDataDictionary = new Dictionary<string, Dictionary<string, Dictionary<string, double>>>();
@@ -77,13 +77,43 @@ namespace NaiveBayes
                         // average/variance is key, number is value
                         var propDictionary = new Dictionary<string, double>();
 
-                        // for each List of similar outcomes ... run command
-                        foreach (var outcome in groupedList)
+                        if(prop.PropertyType == typeof(string))
                         {
-                            /* stores value of each property to e. Need to 
-                             * rename and expand this part of the logic. 
-                             */
-                            var e = prop.GetValue(outcome);
+                            var listOfProperty = new List<double>();
+
+                            var stringAverage = (groupedList.Count() / totalTrainingData);
+
+                            // for each List of similar outcomes ... run command
+                            foreach (var outcome in groupedList)
+                            {
+                                /* stores value of each property to e. Need to 
+                                 * rename and expand this part of the logic. 
+                                 */
+                                listOfProperty.Add(1);
+                            }
+                            var stringVariance = Variance(stringAverage, listOfProperty);
+
+                            propDictionary.Add("average", stringAverage);
+                            propDictionary.Add("variance", stringVariance);
+                        }
+                        else if (prop.PropertyType == typeof(double))
+                        {
+                            var listOfProperty = new List<double>();
+
+                            // for each List of similar outcomes ... run command
+                            foreach (var outcome in groupedList)
+                            {
+                                /* stores value of each property to e. Need to 
+                                 * rename and expand this part of the logic. 
+                                 */
+                                var e = Convert.ToDouble(prop.GetValue(outcome));
+                                listOfProperty.Add(e);
+                            }
+                            var doubleAverage = listOfProperty.Average();
+                            var doubleVariance = Variance(doubleAverage, listOfProperty);
+
+                            propDictionary.Add("average", doubleAverage);
+                            propDictionary.Add("variance", doubleVariance);
                         }
                         outcomeDictionary.Add(prop.Name, propDictionary);
                     }
