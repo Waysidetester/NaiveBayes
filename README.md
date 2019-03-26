@@ -7,7 +7,7 @@ This is a simple but correct implementation of Naive Bayes Classification. Basic
 this code will be updated from time to time to refactor the logic and test for different probability.
 
 ## Data Structure
-The `Program.cs` file is set up to process data the way you shape it. It is currently only set up to solve for a string. In the `Data` class, make sure you have one property that takes a string. This property is the outcome you are trying to predict. Each additional property relating to the data must be a double type. You can enter as many double type properties as you like. It is best if they relate to the final outcome
+The `Program.cs` file is set up to process data the way you shape it. It is currently only set up to solve for a string. In the `Data` class, make sure you have one property that takes a string. This property is the outcome you are trying to predict. Each additional property relating to the data must be a double type. The reason for this is because the function implements Gaussian Bayes theorem. You can enter as many double type properties as you like. It is best if they relate to the final outcome
 
 ### Example
 ```string Gender {get;}
